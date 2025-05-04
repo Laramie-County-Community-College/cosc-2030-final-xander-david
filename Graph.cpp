@@ -6,60 +6,74 @@
 #include <iostream>
 #include <queue>
 
-Graph::Graph(bool isDirected) {
+Graph::Graph(bool isDirected)
+{
     capacity = 10;
     size = 0;
     directed = isDirected;
-    vertices = new VertexNode*[capacity];
+    vertices = new VertexNode *[capacity];
     for (int i = 0; i < capacity; ++i)
         vertices[i] = nullptr;
 }
 
-Graph::~Graph() {
+Graph::~Graph()
+{
     freeMemory();
 }
 
-void Graph::addVertex(int id) {
-    if (findVertexIndex(id) != -1) return;
+void Graph::addVertex(int id)
+{
+    if (findVertexIndex(id) != -1)
+        return;
 
-    if (size == capacity) resize();
+    if (size == capacity)
+        resize();
 
     vertices[size] = new VertexNode{id};
     ++size;
 }
 
-void Graph::addEdge(int u, int v, int weight) {
+void Graph::addEdge(int u, int v, int weight)
+{
     int uIndex = findVertexIndex(u);
     int vIndex = findVertexIndex(v);
 
-    if (uIndex == -1) addVertex(u), uIndex = size - 1;
-    if (vIndex == -1) addVertex(v), vIndex = size - 1;
+    if (uIndex == -1)
+        addVertex(u), uIndex = size - 1;
+    if (vIndex == -1)
+        addVertex(v), vIndex = size - 1;
 
     vertices[uIndex]->adjList.insertFront({v, weight});
 
-    if (!directed) {
+    if (!directed)
+    {
         vertices[vIndex]->adjList.insertFront({u, weight});
     }
 }
 
-void Graph::display() {
-    for (int i = 0; i < size; ++i) {
+void Graph::display()
+{
+    for (int i = 0; i < size; ++i)
+    {
         std::cout << "Vertex " << vertices[i]->id << ": ";
         vertices[i]->adjList.print();
     }
 }
 
-int Graph::findVertexIndex(int id) const {
-    for (int i = 0; i < size; ++i) {
+int Graph::findVertexIndex(int id) const
+{
+    for (int i = 0; i < size; ++i)
+    {
         if (vertices[i]->id == id)
             return i;
     }
     return -1;
 }
 
-void Graph::resize() {
+void Graph::resize()
+{
     capacity *= 2;
-    VertexNode** newArray = new VertexNode*[capacity];
+    VertexNode **newArray = new VertexNode *[capacity];
     for (int i = 0; i < capacity; ++i)
         newArray[i] = nullptr;
 
@@ -70,19 +84,23 @@ void Graph::resize() {
     vertices = newArray;
 }
 
-void Graph::freeMemory() {
-    for (int i = 0; i < size; ++i) {
+void Graph::freeMemory()
+{
+    for (int i = 0; i < size; ++i)
+    {
         delete vertices[i];
     }
     delete[] vertices;
 }
 
-void Graph::bfs(int start) {
-    bool* visited = new bool[size]();
+void Graph::bfs(int start)
+{
+    bool *visited = new bool[size]();
     std::queue<int> q;
 
     int startIndex = findVertexIndex(start);
-    if (startIndex == -1) {
+    if (startIndex == -1)
+    {
         std::cout << "Start vertex not found.\n";
         delete[] visited;
         return;
@@ -93,19 +111,22 @@ void Graph::bfs(int start) {
 
     std::cout << "BFS: ";
 
-    while (!q.empty()) {
+    while (!q.empty())
+    {
         int current = q.front();
         q.pop();
         std::cout << current << " ";
 
         int idx = findVertexIndex(current);
-        LinkedList<std::pair<int, int>>* list = &vertices[idx]->adjList;
+        LinkedList<std::pair<int, int>> *list = &vertices[idx]->adjList;
         list->resetIterator();
 
-        while (list->hasNext()) {
+        while (list->hasNext())
+        {
             int neighbor = list->next().first;
             int neighborIdx = findVertexIndex(neighbor);
-            if (!visited[neighborIdx]) {
+            if (!visited[neighborIdx])
+            {
                 visited[neighborIdx] = true;
                 q.push(neighbor);
             }
@@ -116,10 +137,12 @@ void Graph::bfs(int start) {
     delete[] visited;
 }
 
-void Graph::dfs(int start) {
-    bool* visited = new bool[size]();
+void Graph::dfs(int start)
+{
+    bool *visited = new bool[size]();
     int startIndex = findVertexIndex(start);
-    if (startIndex == -1) {
+    if (startIndex == -1)
+    {
         std::cout << "Start vertex not found.\n";
         delete[] visited;
         return;
@@ -132,17 +155,20 @@ void Graph::dfs(int start) {
     delete[] visited;
 }
 
-void Graph::dfsRecursive(int v, bool* visited) {
+void Graph::dfsRecursive(int v, bool *visited)
+{
     int index = findVertexIndex(v);
-    if (visited[index]) return;
+    if (visited[index])
+        return;
 
     visited[index] = true;
     std::cout << v << " ";
 
-    LinkedList<std::pair<int, int>>* list = &vertices[index]->adjList;
+    LinkedList<std::pair<int, int>> *list = &vertices[index]->adjList;
     list->resetIterator();
 
-    while (list->hasNext()) {
+    while (list->hasNext())
+    {
         int neighbor = list->next().first;
         dfsRecursive(neighbor, visited);
     }

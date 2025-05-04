@@ -12,11 +12,13 @@
 #include <iostream>
 #include "Graph.h"
 
-int main() {
+int main()
+{
     Graph g(false); // Undirected graph
 
     // Add vertices
-    for (int i = 0; i < 8; ++i) g.addVertex(i);
+    for (int i = 0; i < 8; ++i)
+        g.addVertex(i);
 
     // Add edges
     g.addEdge(0, 1, 2);
@@ -30,10 +32,9 @@ int main() {
     g.addEdge(5, 7, 6);
     g.addEdge(6, 7, 3);
 
-    g.display();   // Show all adjacency lists
-    g.bfs(0);      // BFS from node 0
-    g.dfs(0);      // DFS from node 0
+    g.display(); // Show all adjacency lists
+    g.bfs(0);    // BFS from node 0
+    g.dfs(0);    // DFS from node 0
 
     return 0;
 }
-
